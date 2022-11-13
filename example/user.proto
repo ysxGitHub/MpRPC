@@ -1,0 +1,52 @@
+syntax = "proto3"; // 声明了protobuf的版本
+package user; // 声明了代码所在的包（对于C++来说是namespace）
+// 定义下面的选项，表示生成service服务类和rpc方法描述，默认不生成
+option cc_generic_services = true; // 开启
+
+/**
+* @brief 使用经验
+* 一般而言，在protobuf的配置文件里会把字符串类型设置为bytes类型
+* 在编写过程中如果有重复代码，可以把重复的拿出来写成一个message。
+* 在上面的示例中，所编写的是普通的数据类型，protobuf除了数据对象，还有列表和映射表。
+*/
+// message 关键字是定义的文件名, string、int32 则是预定的字段类型，repeated 则是描述字段为可重复任意多次的字段
+
+message ResultCode // 打包失败类
+{
+    int32 errcode = 1; // 错误代码
+    bytes errmsg = 2; // 错误消息
+}
+
+message LoginRequest // 登录请求
+{
+    bytes name = 1; // 姓名
+    bytes pwd = 2;  // 密码
+}
+
+message LoginResponse // 登录响应
+{
+    ResultCode result = 1;  // 失败
+    bool sucess = 2; // 成功
+}
+
+message RegisterRequest // 注册请求
+{
+    uint32 id = 1;  // id
+    bytes name = 2; // 姓名
+    bytes pwd = 3;  // 密码
+}
+
+message RegisterResponse // 注册响应
+{
+    ResultCode result = 1; // 失败
+    bool sucess = 2; // 成功
+}
+
+service UserServiceRpc // RPC服务方法
+{
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+}
+
+// 编译 protoc -I=./ -I=/usr/local/include/ --cpp_out=./  user.proto
+// or 编译 protoc user.proto --cpp_out=./

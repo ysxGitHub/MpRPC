@@ -1,0 +1,42 @@
+syntax = "proto3"; // 声明了protobuf的版本
+
+package fixbug; // 声明了代码所在的包（对于C++来说是namespace）
+
+// 登录消息类型
+message LoginRequest
+{
+    string name = 1;    // 1表示第一个字段
+    string pwd = 2;
+}
+
+// 定义登录响应消息类型
+message LoginResponse
+{
+    int32 errcode = 1;
+    string errmsg = 2;
+    bool success = 3;
+}
+
+// protoc test.proto --cpp_out=./
+
+message User
+{
+    bytes name = 1;
+    uint32 age = 2;
+    enum Sex
+    {
+        WOMAN = 0;
+        MAN = 1;
+    }
+    Sex sex = 3;
+}
+
+message GetUserListResponse
+{
+    LoginRequest request = 1;
+    repeated User user_list = 2; // 列表类型
+}
+
+
+// protoc test.proto --cpp_out=./
+
